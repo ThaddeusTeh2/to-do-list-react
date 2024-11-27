@@ -5,9 +5,29 @@ import AddNewForm from "./components/addnew";
 import ItemList from "./components/list";
 
 function App() {
-  const [todos, setTodos] = useState([]);
+  const stringTodos = localStorage.getItem("todos");
+  const initialTodos = JSON.parse(stringTodos) || [];
+  const [todoList, setTodoList] = useState(initialTodos);
 
-  console.log(todos);
+  //add new item
+  const handleItemNew = (itemName) => {
+    const newTodo = { id: nanoid(), text: itemName, isCompleted: false };
+    setTodoList([...todoList, newTodo]);
+  };
+
+  //delete item
+  const handleItemDelete = (id) => {
+    const updatedTodos = todoList.filter((item) => item.id !== id);
+    setTodoList(updatedTodos);
+  };
+
+  //toggle complete
+  const handleToggleCompleted = (id) => {
+    const updatedTodos = todoList.map((item) =>
+      item.id === id ? { ...item, isCompleted: !item.isCompleted } : item
+    );
+    setTodoList(updatedTodos);
+  };
 
   return (
     <div className="container">
@@ -20,44 +40,13 @@ function App() {
             <h3 className="card-title mb-3">Todos List</h3>
             {/* item list */}
             <ItemList
-              list={todos}
-              /* basically returns all items in state without selected item */
-              onItemDelete={(id) => {
-                // filter OUT item with given id
-                const newTodos = todos.filter((item) => item.id !== id);
-                // update newTodos with setState function
-                setTodos(newTodos);
-              }}
-              /* function takes id, */
-              onToggleCompleted={(id) => {
-                // maps over todos array
-                const updatedTodos = todos.map((item) =>
-                  // & flips isCompleted value 4 selected item.
-                  item.id === id
-                    ? { ...item, isCompleted: !item.isCompleted }
-                    : item
-                );
-
-                console.log(id);
-                // update newTodos with setState function
-                setTodos(updatedTodos);
-              }}
+              list={todoList}
+              onItemDelete={handleItemDelete}
+              onToggleCompleted={handleToggleCompleted}
             />
 
             {/* form submission handling */}
-            <AddNewForm
-              onNewItemAdded={(itemName) => {
-                // clone existing state
-                const newTodos = [...todos];
-                // push new item into newTodos
-                newTodos.push({
-                  id: nanoid(), // generate id
-                  text: itemName,
-                });
-                // update newTodos with setState function
-                setTodos(newTodos);
-              }}
-            />
+            <AddNewForm onNewItemAdded={handleItemNew} />
           </div>
         </div>
       </div>
