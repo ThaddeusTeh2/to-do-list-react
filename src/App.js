@@ -6,9 +6,9 @@ import ItemList from "./components/list";
 
 function App() {
   const stringTodos = localStorage.getItem("todos");
-  const initialTodos = JSON.parse(stringTodos) || [];
+  const originalTodos = JSON.parse(stringTodos) || [];
   //set state for input field
-  const [todoList, setTodoList] = useState(initialTodos);
+  const [todoList, setTodoList] = useState(originalTodos);
 
   //add new item
   const handleItemNew = (itemName) => {
