@@ -7,18 +7,22 @@ import ItemList from "./components/list";
 function App() {
   const stringTodos = localStorage.getItem("todos");
   const initialTodos = JSON.parse(stringTodos) || [];
+  //set state for input field
   const [todoList, setTodoList] = useState(initialTodos);
 
   //add new item
   const handleItemNew = (itemName) => {
     const newTodo = { id: nanoid(), text: itemName, isCompleted: false };
-    setTodoList([...todoList, newTodo]);
+    const updatedTodos = [...todoList, newTodo];
+    setTodoList(updatedTodos);
+    localStorage.setItem("todos", JSON.stringify(updatedTodos));
   };
 
   //delete item
   const handleItemDelete = (id) => {
     const updatedTodos = todoList.filter((item) => item.id !== id);
     setTodoList(updatedTodos);
+    localStorage.setItem("todos", JSON.stringify(updatedTodos));
   };
 
   //toggle complete
@@ -27,6 +31,7 @@ function App() {
       item.id === id ? { ...item, isCompleted: !item.isCompleted } : item
     );
     setTodoList(updatedTodos);
+    localStorage.setItem("todos", JSON.stringify(updatedTodos));
   };
 
   return (
