@@ -5,6 +5,7 @@ function ItemList(props) {
   return (
     <ul className="list-group">
       {list.map((item) => (
+        //pass thru
         <Item
           key={item.id}
           {...item}
